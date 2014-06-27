@@ -1,0 +1,17 @@
+{
+    "name": "samp-query",
+    "description": "Simplified Query API for SAMP",
+    "version": "0.1.0",
+    "author": "JJJan <rueckert@trine.io>",
+    "keywords": [
+        "samp",
+        "query",
+        "util"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "http://github.com/JJJ4n/node-samp-query.git"
+    },
+    "main": "samp-query.js",
+    "dependencies": {},
+}
