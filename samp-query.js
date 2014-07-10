@@ -4,23 +4,23 @@ var query = function (options, callback) {
 
 	var self = this
 
-	if(typeof options === 'string') this.host = options
-	else this.host = options.host
-	this.port = options.port || 7777
-	this.timeout = options.timeout || 1000
+	if(typeof options === 'string') options.host = options
+	else options.host = options.host
+	options.port = options.port || 7777
+	options.timeout = options.timeout || 1000
 	
-	if(!this.host) 
-		return callback.apply(this, [ 'Invalid host' ])
+	if(!options.host) 
+		return callback.apply(options, [ 'Invalid host' ])
 
-	if(!isFinite(this.port) || this.port < 1 || this.port > 65535) 
-		return callback.apply(this, [ 'Invalid port' ])
+	if(!isFinite(options.port) || options.port < 1 || options.port > 65535) 
+		return callback.apply(options, [ 'Invalid port' ])
 
 	var response = {}
 
-	request.call(self, 'i', function(error, information) {
-		if(error) return callback.apply(this, [ error ])
+	request.call(self, options, 'i', function(error, information) {
+		if(error) return callback.apply(options, [ error ])
 
-		response.address		= self.host
+		response.address		= options.host
 		response.hostname 		= information.hostname
 		response.gamemode 		= information.gamemode
 		response.mapname 		= information.mapname
@@ -28,23 +28,23 @@ var query = function (options, callback) {
 		response.maxplayers 	= information.maxplayers
 		response.online			= information.players
 
-		request.call(self, 'r', function(error, rules) {
-			if(error) return callback.apply(this, [ error ])
+		request.call(self, options, 'r', function(error, rules) {
+			if(error) return callback.apply(options, [ error ])
 
 			response.rules = rules
 
-			request.call(self, 'd', function(error, players) {
-				if(error) return callback.apply(this, [ error ])
+			request.call(self, options, 'd', function(error, players) {
+				if(error) return callback.apply(options, [ error ])
 
 				response.players = players
 
-				return callback.apply(this, [ false, response ])
+				return callback.apply(options, [ false, response ])
 			})
 		})
 	})
 }
 
-var request = function(opcode, callback) {
+var request = function(options, opcode, callback) {
 
 	var socket 		= dgram.createSocket("udp4")
 	var packet 		= new Buffer(10 + opcode.length)
@@ -52,37 +52,37 @@ var request = function(opcode, callback) {
 	packet.write('SAMP')
 
 	for(var i = 0; i < 4; ++i) 
-	packet[i + 4] 	= this.host.split('.')[i]
+	packet[i + 4] 	= options.host.split('.')[i]
 
-	packet[8] 		= this.port & 0xFF
-	packet[9] 		= this.port >> 8 & 0xFF
+	packet[8] 		= options.port & 0xFF
+	packet[9] 		= options.port >> 8 & 0xFF
 	packet[10] 		= opcode.charCodeAt(0)
 
 	try {
-		socket.send(packet, 0, packet.length, this.port, this.host, function(error, bytes) {
+		socket.send(packet, 0, packet.length, options.port, options.host, function(error, bytes) {
 			if(error) 
-				return callback.apply(this, [ error ])
+				return callback.apply(options, [ error ])
 
 		})
 	} catch(error) {
-		return callback.apply(this, [ error ])
+		return callback.apply(options, [ error ])
 	}
 
 	var controller = undefined
 
 	var onTimeOut = function() {
 		socket.close()
-		return callback.apply(this, [ 'Host unavailable' ])
+		return callback.apply(options, [ 'Host unavailable' ])
 	}
 
-	controller = setTimeout(onTimeOut, this.timeout)
+	controller = setTimeout(onTimeOut, options.timeout)
 
 	socket.on('message', function (message) {
 
 		if(controller)
 			clearTimeout(controller)
 
-		if(message.length < 11) return callback.apply(this, [ true ])
+		if(message.length < 11) return callback.apply(options, [ true ])
 		else {
 			socket.close()
 
@@ -121,7 +121,7 @@ var request = function(opcode, callback) {
 
 					object.mapname 		= message.toString(undefined, offset, offset += strlen)
 
-					return callback.apply(this, [ false, object ])
+					return callback.apply(options, [ false, object ])
 
 				}
 
@@ -149,7 +149,7 @@ var request = function(opcode, callback) {
 						--rulecount
 					}
 
-					return callback.apply(this, [ false, object ])
+					return callback.apply(options, [ false, object ])
 				}
 
 				if(opcode == 'd') {
@@ -182,11 +182,11 @@ var request = function(opcode, callback) {
 						--playercount
 					}
 
-					return callback.apply(this, [ false, array ])
+					return callback.apply(options, [ false, array ])
 				}
 
 			} catch (exception) {
-				return callback.apply(this, [ exception ])
+				return callback.apply(options, [ exception ])
 			}
 		}
 	})
