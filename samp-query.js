@@ -5,7 +5,6 @@ var query = function (options, callback) {
 	var self = this
 
 	if(typeof options === 'string') options.host = options
-	else options.host = options.host
 	options.port = options.port || 7777
 	options.timeout = options.timeout || 1000
 	
