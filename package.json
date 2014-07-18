@@ -1,6 +1,6 @@
 {
   "name": "samp-query",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Simplified Query API for SAMP",
   "main": "samp-query.js",
   "repository": {
@@ -10,7 +10,8 @@
   "keywords": [
     "samp",
     "query",
-    "util"
+    "util",
+    "tool"
   ],
   "author": "JJJan <rueckert@trine.io>",
   "license": "ISC",

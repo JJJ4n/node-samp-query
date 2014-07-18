@@ -32,13 +32,20 @@ var query = function (options, callback) {
 
 			response.rules = rules
 
-			request.call(self, options, 'd', function(error, players) {
-				if(error) return callback.apply(options, [ error ])
-
-				response.players = players
-
+			if(response.online > 100) {
+				response.players = {}
+				
 				return callback.apply(options, [ false, response ])
-			})
+			}
+			else {
+				request.call(self, options, 'd', function(error, players) {
+					if(error) return callback.apply(options, [ error ])
+
+					response.players = players
+
+					return callback.apply(options, [ false, response ])
+				})
+			}
 		})
 	})
 }
