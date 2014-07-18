@@ -23,12 +23,16 @@ var query = function (options, callback) {
 		response.hostname 		= information.hostname
 		response.gamemode 		= information.gamemode
 		response.mapname 		= information.mapname
-		response.passworded 	= information.passworded
+		response.passworded 	= information.passworded === 1
 		response.maxplayers 	= information.maxplayers
 		response.online			= information.players
 
 		request.call(self, options, 'r', function(error, rules) {
 			if(error) return callback.apply(options, [ error ])
+
+            rules.lagcomp = rules.lagcomp === 'On'
+
+            rules.weather = parseInt(rules.weather, 10)
 
 			response.rules = rules
 
