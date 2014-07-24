@@ -36,14 +36,14 @@ query(options, function (error, response) {
 	hostname: 'German Extreme Freeroam - Stunt/Derby/Race/DM/Free',
 	gamemode: 'Stunt Race Derby DM Fun',
 	mapname: 'San Andreas',
-	passworded: 0,
+	passworded: false,
 	maxplayers: 500,
 	online: 12,
 	rules: { 
-		lagcomp: 'On',
+		lagcomp: true,
 		mapname: 'San Andreas',
 		version: '0.3z',
-		weather: '18',
+		weather: 18,
 		weburl: 'www.gef.io',
 		worldtime: '12:00'
 	},
