@@ -103,7 +103,7 @@ var request = function(options, opcode, callback) {
 
             try {
 
-                if(opcode == 'i') {
+                if(opcode == 'i') {               
 
                     object.passworded = message.readUInt8(offset)
                     offset += 1
@@ -117,17 +117,17 @@ var request = function(options, opcode, callback) {
                     strlen = message.readUInt16LE(offset)
                     offset += 4
 
-                    object.hostname = message.toString('binary', offset, offset += strlen)
+                    object.hostname = decode(message.slice(offset, offset += strlen))
 
                     strlen = message.readUInt16LE(offset)
                     offset += 4
 
-                    object.gamemode = message.toString('binary', offset, offset += strlen)
+                    object.gamemode = decode(message.slice(offset, offset += strlen))
 
                     strlen = message.readUInt16LE(offset)
                     offset += 4
 
-                    object.mapname = message.toString('binary', offset, offset += strlen)
+                    object.mapname = decode(message.slice(offset, offset += strlen))
 
                     return callback.apply(options, [ false, object ])
 
@@ -145,12 +145,12 @@ var request = function(options, opcode, callback) {
                         strlen = message.readUInt8(offset)
                         ++offset
 
-                        property = message.toString('binary', offset, offset += strlen)
+                        property = decode(message.slice(offset, offset += strlen))
 
                         strlen = message.readUInt8(offset)
                         ++offset
 
-                        value = message.toString('binary', offset, offset += strlen)
+                        value = decode(message.slice(offset, offset += strlen))
 
                         object[property] = value
 
@@ -177,7 +177,7 @@ var request = function(options, opcode, callback) {
                         strlen = message.readUInt8(offset)
                         ++offset
 
-                        player.name = message.toString('binary', offset, offset += strlen)
+                        player.name = decode(message.slice(offset, offset += strlen))
 
                         player.score = message.readUInt16LE(offset)
                         offset += 4
@@ -198,6 +198,19 @@ var request = function(options, opcode, callback) {
             }
         }
     })
+}
+
+var decode = function(buffer) {
+    var charset = ''
+    for (var i = 0; i < 128; i++) charset += String.fromCharCode(i)
+    charset += '€�‚ƒ„…†‡�‰�‹�����‘’“”•–—�™�›���� ΅Ά£¤¥¦§¨©�«¬­®―°±²³΄µ¶·ΈΉΊ»Ό½ΎΏΐΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡ�ΣΤΥΦΧΨΩΪΫάέήίΰαβγδεζηθικλμνξοπρςστυφχψωϊϋόύώ�'
+    var charsetBuffer = new Buffer(charset, 'ucs2')
+    var decodeBuffer = new Buffer(buffer.length * 2)
+    for(var i = 0; i < buffer.length; i++) {
+        decodeBuffer[i * 2] = charsetBuffer[buffer[i] * 2]
+        decodeBuffer[i * 2 + 1] = charsetBuffer[buffer[i] * 2 + 1]
+    }
+    return decodeBuffer.toString('ucs2')
 }
 
 module.exports = query

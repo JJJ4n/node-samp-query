@@ -33,7 +33,7 @@ query(options, function (error, response) {
 ```
 { 
 	address: '94.23.166.205',
-	hostname: 'German Extreme Freeroam - Stunt/Derby/Race/DM/Free',
+	hostname: '• German Extreme Freeroam • Stunt/Derby/Race/DM/Free',
 	gamemode: 'Stunt Race Derby DM Fun',
 	mapname: 'San Andreas',
 	passworded: false,

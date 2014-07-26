@@ -1,6 +1,6 @@
 {
   "name": "samp-query",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Simplified Query API for SAMP",
   "main": "samp-query.js",
   "repository": {
