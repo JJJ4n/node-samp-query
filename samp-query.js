@@ -37,7 +37,7 @@ var query = function (options, callback) {
             response.rules = rules
 
             if(response.online > 100) {
-                response.players = {}
+                response.players = []
 
                 return callback.apply(options, [ false, response ])
             }
