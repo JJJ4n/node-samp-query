@@ -20,6 +20,7 @@ var query = function (options, callback) {
         if(error) return callback.apply(options, [ error ])
 
         response.address = options.host
+		response.port = options.port
         response.hostname = information.hostname
         response.gamemode = information.gamemode
         response.mapname = information.mapname
