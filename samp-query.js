@@ -57,7 +57,7 @@ var query = function (options, callback) {
 var request = function(options, opcode, callback) {
 
     var socket = dgram.createSocket("udp4")
-    var packet = new Buffer(10 + opcode.length)
+    var packet = Buffer.alloc(10 + opcode.length)
 
     packet.write('SAMP')
 
@@ -204,8 +204,8 @@ var decode = function(buffer) {
     var charset = ''
     for (var i = 0; i < 128; i++) charset += String.fromCharCode(i)
     charset += '€�‚ƒ„…†‡�‰�‹�����‘’“”•–—�™�›���� ΅Ά£¤¥¦§¨©�«¬­®―°±²³΄µ¶·ΈΉΊ»Ό½ΎΏΐΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡ�ΣΤΥΦΧΨΩΪΫάέήίΰαβγδεζηθικλμνξοπρςστυφχψωϊϋόύώ�'
-    var charsetBuffer = new Buffer(charset, 'ucs2')
-    var decodeBuffer = new Buffer(buffer.length * 2)
+    var charsetBuffer = Buffer.from(charset, 'ucs2')
+    var decodeBuffer = Buffer.alloc(buffer.length * 2)
     for(var i = 0; i < buffer.length; i++) {
         decodeBuffer[i * 2] = charsetBuffer[buffer[i] * 2]
         decodeBuffer[i * 2 + 1] = charsetBuffer[buffer[i] * 2 + 1]
