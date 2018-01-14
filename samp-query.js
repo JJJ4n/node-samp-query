@@ -26,6 +26,7 @@ var query = function (options, callback) {
         response.mapname = information.mapname
         response.passworded = information.passworded === 1
         response.maxplayers = information.maxplayers
+        response.language = information.language
         response.online = information.players
 
         request.call(self, options, 'r', function(error, rules) {
@@ -129,6 +130,8 @@ var request = function(options, opcode, callback) {
                     offset += 4
 
                     object.mapname = decode(message.slice(offset, offset += strlen))
+                    
+                    object.language = decode(message.slice(message.length - strlen))
 
                     return callback.apply(options, [ false, object ])
 

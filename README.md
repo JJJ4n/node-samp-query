@@ -36,6 +36,7 @@ query(options, function (error, response) {
 	hostname: '• German Extreme Freeroam • Stunt/Derby/Race/DM/Free',
 	gamemode: 'Stunt Race Derby DM Fun',
 	mapname: 'San Andreas',
+	language: 'English',
 	passworded: false,
 	maxplayers: 500,
 	online: 12,
