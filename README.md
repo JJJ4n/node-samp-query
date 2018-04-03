@@ -14,7 +14,7 @@ npm install samp-query
 * port - default: 7777
 * timeout - default: 1000
 
-```
+```js
 var query = require('samp-query')
 
 var options = {
@@ -30,7 +30,7 @@ query(options, function (error, response) {
 ```
 
 #### Sample output
-```
+```js
 { 
 	address: '94.23.166.205',
 	hostname: '• German Extreme Freeroam • Stunt/Derby/Race/DM/Free',
@@ -39,6 +39,7 @@ query(options, function (error, response) {
 	passworded: false,
 	maxplayers: 500,
 	online: 12,
+	ping: 27,
 	rules: { 
 		lagcomp: true,
 		mapname: 'San Andreas',
@@ -47,6 +48,7 @@ query(options, function (error, response) {
 		weburl: 'www.gef.io',
 		worldtime: '12:00'
 	},
+	/* Players array can be empty if online > 100 or connectin droped while d query */
 	players: [
 		{ id: 0, name: 'hallihallomine', score: 14735, ping: 51 },
 		{ id: 1, name: 'xGreenDayx', score: 26193, ping: 81 },
