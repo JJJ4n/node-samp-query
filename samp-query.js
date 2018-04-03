@@ -23,10 +23,11 @@ var query = function (options, callback) {
         response.port = options.port
         response.hostname = information.hostname
         response.gamemode = information.gamemode
-        response.mapname = information.mapname
+        response.language = information.language
         response.passworded = information.passworded === 1
         response.maxplayers = information.maxplayers
         response.online = information.players
+        response.ping = information.ping
 
         request.call(self, options, 'r', function(error, rules) {
             if(error) return callback.apply(options, [ error ])
@@ -69,9 +70,11 @@ var request = function(options, opcode, callback) {
     packet[9] = options.port >> 8 & 0xFF
     packet[10] = opcode.charCodeAt(0)
 
+    let ping_start;
     try {
         socket.send(packet, 0, packet.length, options.port, options.host, function(error, bytes) {
             if(error) return callback.apply(options, [ error ])
+            ping_start = Date.now();
         })
     } catch(error) {
         return callback.apply(options, [ error ])
@@ -87,6 +90,7 @@ var request = function(options, opcode, callback) {
     controller = setTimeout(onTimeOut, options.timeout)
 
     socket.on('message', function (message) {
+        let ping = Date.now() - ping_start;
 
         if(controller)
             clearTimeout(controller)
@@ -97,7 +101,7 @@ var request = function(options, opcode, callback) {
 
             message = message.slice(11)
 
-            var object = {}
+            var object = {ping}
             var array = []
             var strlen = 0
             var offset = 0
@@ -128,7 +132,7 @@ var request = function(options, opcode, callback) {
                     strlen = message.readUInt16LE(offset)
                     offset += 4
 
-                    object.mapname = decode(message.slice(offset, offset += strlen))
+                    object.language = decode(message.slice(offset, offset += strlen))
 
                     return callback.apply(options, [ false, object ])
 
@@ -201,17 +205,9 @@ var request = function(options, opcode, callback) {
     })
 }
 
+const iconv = require('iconv-lite');
 var decode = function(buffer) {
-    var charset = ''
-    for (var i = 0; i < 128; i++) charset += String.fromCharCode(i)
-    charset += '€�‚ƒ„…†‡�‰�‹�����‘’“”•–—�™�›���� ΅Ά£¤¥¦§¨©�«¬­®―°±²³΄µ¶·ΈΉΊ»Ό½ΎΏΐΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡ�ΣΤΥΦΧΨΩΪΫάέήίΰαβγδεζηθικλμνξοπρςστυφχψωϊϋόύώ�'
-    var charsetBuffer = Buffer.from(charset, 'ucs2')
-    var decodeBuffer = Buffer.alloc(buffer.length * 2)
-    for(var i = 0; i < buffer.length; i++) {
-        decodeBuffer[i * 2] = charsetBuffer[buffer[i] * 2]
-        decodeBuffer[i * 2 + 1] = charsetBuffer[buffer[i] * 2 + 1]
-    }
-    return decodeBuffer.toString('ucs2')
+    return iconv.decode(buffer, 'win1251');
 }
 
 module.exports = query
