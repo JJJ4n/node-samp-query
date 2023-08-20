@@ -1,22 +1,21 @@
 {
   "name": "samp-query",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Simplified Query API for SAMP",
-  "main": "samp-query.js",
+  "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/JJJ4n/node-samp-query.git"
+    "url": "https://github.com/DimaCrafter/node-samp-query.git"
   },
-  "keywords": [
-    "samp",
-    "query",
-    "util",
-    "tool"
+  "keywords": ["samp", "query", "util", "tool"],
+  "author": "DimaCrafter <backup.dimacrafter@gmail.com>",
+  "contributors": [
+    "JJJan <rueckert@trine.io>"
   ],
-  "author": "JJJan <rueckert@trine.io>",
   "bugs": {
-    "url": "https://github.com/JJJ4n/node-samp-query/issues"
+    "url": "https://github.com/DimaCrafter/node-samp-query/issues"
   },
-  "homepage": "https://github.com/JJJ4n/node-samp-query",
-  "dependencies": {}
+  "dependencies": {
+    "iconv-lite": "^0.6.3"
+  }
 }

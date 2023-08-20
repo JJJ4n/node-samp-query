@@ -1,67 +1,90 @@
 # node-samp-query
 
-Simplified Query API for SAMP
+Simplified Query API for SAMP.
+Original JJJ4n's repo seems to be abandoned, so I made fork with some improvements.
 
+```sh
+npm install DimaCrafter/node-samp-query
+# OR
+yarn add DimaCrafter/node-samp-query
 ```
-npm install samp-query
-```
 
-#### Usage
+## Usage
 
-**Available options**
+Available options:
 
-* host
-* port - default: 7777
-* timeout - default: 1000
+| Field     | Default   | Description                          |
+|-----------|-----------|--------------------------------------|
+| `host`    | 127.0.0.1 | Hostname or IP-address of the server |
+| `port`    | 7777      | Game server port                     |
+| `timeout` | 1000      | Maximum response waiting time in ms  |
 
-```
-var query = require('samp-query')
+```js
+const { sampQuery } = require('samp-query');
 
-var options = {
-	host: '94.23.166.205'
+const options = {
+    host: '123.45.67.89',
+    // Or hostname also can be a domain with A record
+    host: 'play.myserver.net',
+
+    // Optional fields
+    port: 7777,
+    timeout: 1500
+};
+
+function main () {
+    // Callback style
+    sampQuery(options)
+        .then(info => console.log(info))
+        .catch(error => console.log(error));
 }
 
-query(options, function (error, response) {
-	if(error)
-		console.log(error)
-	else 
-		console.log(response)
-})
+async function main () {
+    // Async style
+    try {
+        const info = await sampQuery(options);
+        console.log(info);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+// Calling just created async function because NodeJS still can't handle top-level await :(
+main();
 ```
 
-#### Sample output
-```
-{ 
-	address: '94.23.166.205',
-	hostname: '• German Extreme Freeroam • Stunt/Derby/Race/DM/Free',
-	gamemode: 'Stunt Race Derby DM Fun',
-	mapname: 'San Andreas',
-	passworded: false,
-	maxplayers: 500,
-	online: 12,
-	rules: { 
-		lagcomp: true,
-		mapname: 'San Andreas',
-		version: '0.3z',
-		weather: 18,
-		weburl: 'www.gef.io',
-		worldtime: '12:00'
-	},
-	players: [
-		{ id: 0, name: 'hallihallomine', score: 14735, ping: 51 },
-		{ id: 1, name: 'xGreenDayx', score: 26193, ping: 81 },
-		{ id: 2, name: '[Black]Rider', score: 87211, ping: 41 },
-		{ id: 3, name: 'Kohl', score: 439313, ping: 45 },
-		{ id: 5, name: 'TheSituation', score: 14775, ping: 41 },
-		{ id: 6, name: 'EziT', score: 38914, ping: 66 },
-		{ id: 7, name: 'Josiee', score: 2104, ping: 56 },
-		{ id: 8, name: 'Derbystar', score: 29, ping: 56 },
-		{ id: 9, name: 'xXProPlayXx', score: 20354, ping: 45 },
-		{ id: 10, name: 'hakco30', score: 0, ping: 81 },
-		{ id: 11, name: 'xXDarkBolleXx', score: 38886, ping: 56 },
-		{ id: 12, name: 'SDMPro', score: 0, ping: 51 }
-	]
+## Sample outputs
+
+```js
+{
+    ping: 28,
+    hasPassword: false,
+    playersOnline: 3,
+    maxPlayers: 20,
+    serverName: 'My SA:MP Server',
+    gameMode: 'Custom DM',
+    language: 'San Andreas',
+    rules: {
+        lagcomp: true,
+        mapname: 'San Andreas',
+        version: '0.3.7-R2',
+        weather: 17,
+        weburl: 'myserver.net',
+        worldtime: '12:00'
+    },
+    players: [
+        { id: 0, name: 'JJJ4n', score: 87211, ping: 51 },
+        { id: 1, name: 'DummyPlayer', score: 0, ping: 81 },
+        { id: 2, name: 'AnotherOne', score: 20354, ping: 41 }
+    ]
 }
 ```
 
+### Error outputs
 
+```txt
+SampError: Request timeout
+SampError: Invalid response received
+SampError: Invalid port
+SampError: Hostname resolved to empty list
+```
